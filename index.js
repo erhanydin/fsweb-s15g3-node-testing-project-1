@@ -5,9 +5,15 @@
  *
  * ÖRNEK
  * nesneyiTrimle({ isim: '  jane  ' }) // yeni bir nesne döndürür { name: 'jane' }
- */
+ */ 
 function nesneyiTrimle(obj) {
   // ✨ kodlar buraya
+  for(let i in obj) {
+    if(typeof obj[i] === 'string') {
+      obj[i] = obj[i].trim();
+    }
+  }
+  return obj;
 }
 
 /**
@@ -20,6 +26,10 @@ function nesneyiTrimle(obj) {
  */
 function verileniTrimle(obj, prop) {
   // ✨ kodlar buraya
+  if(typeof obj[prop] === 'string') {
+    obj[prop].trim();
+  }
+  return obj;
 }
 
 /**
@@ -32,6 +42,17 @@ function verileniTrimle(obj, prop) {
  */
 function enBuyukTamsayiyiBul(tamsayilar) {
   // ✨ kodlar buraya
+
+  let enBuyuk = tamsayilar[0].tamsayi;
+  for (let i = 0; i < tamsayilar.length; i++) {
+    const element = tamsayilar[i];
+    if(element.tamsayi > enBuyuk) {
+      enBuyuk = element.tamsayi;
+    } 
+  }
+  return enBuyuk;
+
+
 }
 
 function Sayici(ilkSayi) {
@@ -55,8 +76,15 @@ function Sayici(ilkSayi) {
    * sayac.asagiSay() // 0 döndürür
    * sayac.asagiSay() // 0 döndürür
    */
+  let tempSayi = ilkSayi;
   this.asagiSay = () => {
     // ✨ kodlar buraya
+    if(tempSayi >= 0) {
+      return tempSayi--;
+    } else {
+      return 0;
+    }
+  
   }
 }
 
@@ -79,12 +107,27 @@ function Mevsimler() {
    * mevsimler.sonraki() // "ilkbahar" döndürür
    * mevsimler.sonraki() // "yaz" döndürür
    */
+
+  let mevsimler = ["ilkbahar", "yaz", "sonbahar", "kış"]
+  let i = 0;
+
   this.sonraki = () => {
     // ✨ kodlar buraya
+    i = (i + 1) % mevsimler.length;
+    return mevsimler[i];
+
   }
 }
 
-function Araba(/*kodlar buraya */) {
+const mevsimler = new Mevsimler();
+for(let i = 0; i < 7; i++) {
+  console.log(mevsimler.sonraki());
+ }
+
+function Araba(isim, depoBenzin, kml) {
+
+  
+
   /**
    * [Görev 6A] Araba 3 argüman alarak bir araba nesnesi oluşturur
    * @param {string} isim - arabanın ismi
@@ -94,9 +137,9 @@ function Araba(/*kodlar buraya */) {
  
     this.odometer = 0 // araba 0 kilometrede yüklenecek
     this.depo = depoBenzin // araba full depoyla yüklenecek
-    // ✨ gerekli propları ekleyin
-
-  
+    this.isim = isim;
+    this.kml = kml;
+    this.maxDepo = depoBenzin;
 
   /**
    * [Görev 6B] sur metodu odometera km ekler ve aynı oranda depodan benzin tüketir
@@ -113,6 +156,16 @@ function Araba(/*kodlar buraya */) {
    */
   this.sur = (gidilecekyol) => {
     // ✨ kodlar buraya
+    let maxYol = this.depo * this.kml;
+    if(gidilecekyol <= maxYol) {
+      this.odometer = this.odometer + gidilecekyol;
+      this.depo = this.depo - (gidilecekyol / this.kml);
+      return this.odometer;
+    } else {
+      this.depo = 0;
+      this.odometer = this.odometer + maxYol;
+      return this.odometer;
+    }
   }
 
   /**
@@ -128,8 +181,27 @@ function Araba(/*kodlar buraya */) {
    */
   this.benzinal = (litre) => {
     // ✨ kodlar buraya
+    let bosDepo = this.maxDepo - this.depo;
+    let gidilecekKm;
+    if(litre <= bosDepo) {
+      this.depo = this.depo + litre;
+      gidilecekKm = this.depo * this.kml;
+      return gidilecekKm;
+    } else {
+      this.depo = this.maxDepo;
+      gidilecekKm = this.depo * this.kml;
+      return gidilecekKm;
+    }
   }
 }
+
+const focus = new Araba('focus', 20, 30);
+// console.log(focus.sur(600));
+// console.log(focus.sur(1));
+// console.log(focus.sur(99));
+
+
+
 
 /**
  * [Görev 7] Bir sayının çift olup olmadığını asenkron olarak çözümler
@@ -146,6 +218,10 @@ function Araba(/*kodlar buraya */) {
  */
 function asenkronCiftSayi(sayi) {
   // ✨ implement
+  return new Promise(res => {
+    res(sayi % 2 === 0);
+  })
+  
 }
 
 module.exports = {
